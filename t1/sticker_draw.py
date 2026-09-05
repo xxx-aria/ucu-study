@@ -8,20 +8,47 @@ RED = "#F97676"
 
 Screen().setup(width=1200, height=800)
 speed(0)
-width(12)
+PEN_WIDTH = 12
+width(PEN_WIDTH)
+
+def draw_4(num_h, num_w):
+    # 90 + 140 + 130 = 360
+    setheading(90)
+    forward(num_h)
+    left(140)
+    forward(num_w * 7/6)
+    left(130)
+    forward(num_w)
+
+
+def draw_0(num_h, num_w):
+    straight_line = num_h - num_w
+    setheading(0)
+    circle(num_w/2, 90)
+    forward(straight_line)
+    circle(num_w/2, 180)
+    forward(straight_line)
+    circle(num_w/2, 90)
+    circle(num_w/2, -90)
+    angle = math.degrees(math.atan((straight_line/num_w)))
+    diag = math.sqrt(straight_line ** 2 + num_w ** 2)
+    setheading(angle)
+    forward(diag)
+
 
 def draw_shell(shell_color, text_color, error_color):
-    # рівнобічна трапеція a || b (c - бічна)
-    a = 520
-    b = 680
-    c = 320
-    h = math.sqrt(c**2 - ((b-a)/2)**2)
-    turn = 60
+    # рівнобічна трапеція top_w || bottom_w (side_len - бічна)
+    top_w = 520
+    bottom_w = 680
+    side_len = 320
+    trap_h = math.sqrt(side_len**2 - ((bottom_w-top_w)/2)**2)
+
+    side_angle = 60
     # радіус для нижньої дуги
-    R = 800
+    radius = 800
 
     x_shift = -50
-    y_shift = h/2+80
+    y_shift = trap_h/2 + 80
 
     pencolor(shell_color)
     fillcolor(shell_color)
@@ -30,32 +57,47 @@ def draw_shell(shell_color, text_color, error_color):
     setheading(0)
     pendown()
     begin_fill()
-    forward(a/2)
-    right(turn)
-    forward(c)
+    forward(top_w/2)
+    right(side_angle)
+    forward(side_len)
 
     # кут повороту
-    central_angle = math.degrees(2*math.asin((b/2)/R))
-    setheading(180+central_angle/2)
-    circle(-R, central_angle)
+    central_angle = math.degrees(2*math.asin((bottom_w/2)/radius))
+    setheading(180 + central_angle/2)
+    circle(-radius, central_angle)
 
-    setheading(turn)
-    forward(c)
+    setheading(side_angle)
+    forward(side_len)
     goto(x_shift, y_shift)
     end_fill()
     penup()
 
-    goto(x_shift-80, y_shift-h/3-65)
-    pendown()
+    y_shift_text = y_shift - trap_h/3
+    goto(x_shift - 15, y_shift_text - 30)
     pencolor(error_color)
-    write('404', font=('Mono', 50, 'bold'))
-    penup()
-    pencolor(text_color)
-    goto(x_shift-80, y_shift-h/3-210)
     pendown()
-    write(f'SHELL\nNOT FOUND', font=('Courier', 28))
+
+    num_h = 100
+    four_w = 80
+    zero_w = 50
+    width(PEN_WIDTH - 2)
+    draw_4(num_h, four_w)
     penup()
+    goto(x_shift + 55, y_shift_text - 30)
+    pendown()
+    draw_0(num_h, zero_w)
+    penup()
+    goto(x_shift + 165, y_shift_text - 30)
+    pendown()
+    draw_4(num_h, four_w)
+    width(PEN_WIDTH)
+    penup()
+
+    pencolor(text_color)
+    goto(x_shift - 80, y_shift_text - 205)
+    write('SHELL\nNOT FOUND', font=('Courier', 28))
     home()
+
 
 def draw_body(skin_color, border_color):
     body_h = 90
@@ -63,7 +105,8 @@ def draw_body(skin_color, border_color):
     pencolor(border_color)
     fillcolor(skin_color)
     penup()
-    goto(-body_len/2+20, body_h-80)
+    goto(-body_len/2 + 20, body_h - 80)
+    setheading(0)
     pendown()
     begin_fill()
     forward(body_len)
@@ -71,35 +114,41 @@ def draw_body(skin_color, border_color):
     forward(body_len)
     circle(-body_h, 180)
     end_fill()
+
     penup()
     home()
 
+
 def draw_head(skin_color, border_color):
     head_r = 150
+    head_x = -330
+    head_y = -120
     pencolor(border_color)
     fillcolor(skin_color)
     penup()
-    goto(-330, -120)
+    goto(head_x, head_y)
     setheading(0)
     pendown()
     begin_fill()
     circle(head_r)
     end_fill()
     penup()
-    goto(-330-head_r/3, -100+head_r)
+    goto(head_x - head_r/3, head_y + 20 + head_r)
     dot(30, border_color)
-    goto(-330+head_r/3, -100+head_r)
+    goto(head_x + head_r/3, head_y + 20 + head_r)
     dot(30, border_color)
-    goto(-370, -180+head_r)
+    goto(head_x - 40, head_y - 60 + head_r)
     pendown()
     forward(80)
+
     penup()
     home()
+
 
 def draw_leg(skin_color, border_color, x_cor, y_cor):
     leg_l = 110
     leg_w = 60
-    angle_r = 30
+    corner_r = 30
     pencolor(border_color)
     fillcolor(skin_color)
     penup()
@@ -108,23 +157,28 @@ def draw_leg(skin_color, border_color, x_cor, y_cor):
     pendown()
     begin_fill()
     forward(leg_l)
-    circle(angle_r, 90)
+    circle(corner_r, 90)
     forward(leg_w)
-    circle(angle_r, 90)
+    circle(corner_r, 90)
     forward(leg_l)
+    # місце, де нога з'єднується з тілом (без контуру)
     pencolor(skin_color)
-    circle(angle_r, 90)
+    circle(corner_r, 90)
     forward(leg_w)
-    circle(angle_r, 90)
+    circle(corner_r, 90)
     end_fill()
+
     penup()
     home()
 
+
 def draw_tail(skin_color, border_color):
+    tail_x = 345
+    tail_y = -80
     pencolor(border_color)
     fillcolor(skin_color)
     penup()
-    goto(345, -80)
+    goto(tail_x, tail_y)
     setheading(-30)
     pendown()
     begin_fill()
@@ -132,14 +186,17 @@ def draw_tail(skin_color, border_color):
     right(150)
     forward(110)
     end_fill()
+
     penup()
     home()
 
+# лапи позаду тіла
 draw_leg(GREEN, DARK, -250, -130)
 draw_leg(GREEN, DARK, 100, -130)
 
 draw_body(GREEN, DARK)
 
+# лапи перед тілом
 draw_leg(GREEN, DARK, -180, -150)
 draw_leg(GREEN, DARK, 170, -150)
 
