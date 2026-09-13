@@ -1,41 +1,53 @@
-from math import log, cbrt
+from math import log
 
-LIFE_EXPECT_MIN = 20
-LIFE_EXPECT_MAX = 85
-YEARS_SCHOOL_EXPECT_MIN = 0
-YEARS_SCHOOL_EXPECT_MAX = 18
-YEARS_SCHOOL_MEAN_MIN = 0
-YEARS_SCHOOL_MEAN_MAX = 15
+LIFE_EXPECTANCY_MIN = 20
+LIFE_EXPECTANCY_MAX = 85
+EXPECTED_YEARS_SCHOOLING_MIN = 0
+EXPECTED_YEARS_SCHOOLING_MAX = 18
+MEAN_YEARS_SCHOOLING_MIN = 0
+MEAN_YEARS_SCHOOLING_MAX = 15
 GNI_PER_CAPITA_MIN = 100
 GNI_PER_CAPITA_MAX = 75_000
 
 country = input()
-life_expect = float(input())
-years_school_expect = float(input())
-years_school_mean = float(input())
+life_expectancy = float(input())
+expected_years_schooling = float(input())
+mean_years_schooling = float(input())
 gni_per_capita = float(input())
 
-health_idx = (life_expect - LIFE_EXPECT_MIN) / (LIFE_EXPECT_MAX - LIFE_EXPECT_MIN)
+life_expectancy_idx = (
+    (life_expectancy - LIFE_EXPECTANCY_MIN)
+    / (LIFE_EXPECTANCY_MAX - LIFE_EXPECTANCY_MIN)
+)
 
-years_school_expect_idx = (years_school_expect - YEARS_SCHOOL_EXPECT_MIN) / (YEARS_SCHOOL_EXPECT_MAX - YEARS_SCHOOL_EXPECT_MIN)
-years_school_mean_idx = (years_school_mean - YEARS_SCHOOL_MEAN_MIN) / (YEARS_SCHOOL_MEAN_MAX - YEARS_SCHOOL_MEAN_MIN)
+expected_years_schooling_idx = (
+    (expected_years_schooling - EXPECTED_YEARS_SCHOOLING_MIN)
+    / (EXPECTED_YEARS_SCHOOLING_MAX - EXPECTED_YEARS_SCHOOLING_MIN)
+)
 
-education_idx = (years_school_expect_idx + years_school_mean_idx) / 2
-gni_idx = (log(gni_per_capita) - log(GNI_PER_CAPITA_MIN)) / (log(GNI_PER_CAPITA_MAX) - log(GNI_PER_CAPITA_MIN))
+mean_years_schooling_idx = (
+    (mean_years_schooling - MEAN_YEARS_SCHOOLING_MIN)
+    / (MEAN_YEARS_SCHOOLING_MAX - MEAN_YEARS_SCHOOLING_MIN)
+)
 
-print(f'Life expectancy index for {country} is {health_idx:.4f}.')
+education_idx = (expected_years_schooling_idx + mean_years_schooling_idx) / 2
+
+gni_idx = (
+    (log(gni_per_capita) - log(GNI_PER_CAPITA_MIN))
+    / (log(GNI_PER_CAPITA_MAX) - log(GNI_PER_CAPITA_MIN))
+)
+
+print(f'Life expectancy index for {country} is {life_expectancy_idx:.4f}.')
 print(f'Education index for {country} is {education_idx:.4f}.')
 print(f'GNI index for {country} is {gni_idx:.4f}.')
 
-hdi = cbrt(health_idx * education_idx * gni_idx)
+hdi = (life_expectancy_idx * education_idx * gni_idx) ** (1 / 3)
 
-print(f'HDI for {country} is {hdi:.4f}.')
-
+print(f'HDI for {country} is {hdi:.3f}.')
 print(f'HDI for {country} is high: {hdi > 0.7}.')
 
-worst_idx = min(health_idx, education_idx, gni_idx)
+worst_idx = min(life_expectancy_idx, education_idx, gni_idx)
 print(f'The worst index for {country} is {worst_idx:.4f}.')
 
-print(f'The worst index for {country} is {worst_idx:.4f}.')
-# ['education', 'health', 'money'][[n1, n2, n3].index(max([n1, n2, n3]))]
-# 'money'
+worst_idx_name = ('Life expectancy index', 'Education index', 'GNI index')[(life_expectancy_idx, education_idx, gni_idx).index(worst_idx)]
+print(f'The worst index for {country} is {worst_idx_name}.')
