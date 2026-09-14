@@ -15,8 +15,13 @@ print("Window:",
 print("Tk scaling:",
       canvas.tk.call("tk", "scaling"))
 
-# ------
+# ------ SOLUTION
 
+current_scaling = float(canvas.tk.call("tk", "scaling"))
+target_scaling = 2.666
+font_size = round(28 * target_scaling / current_scaling)
+
+# ------
 
 # ідея стікера = error 404 + каламбур з shell + черепаха, намальована за допомогою turtle
 # shell - це і програмна оболонка, і панцир черепахи
@@ -26,7 +31,7 @@ DARK = "#1C2431"
 GREEN = "#9EE07C"
 RED = "#F97676"
 
-Screen().setup(width=1200, height=800)
+Screen().setup(1200, 800)
 speed(0)
 PEN_WIDTH = 12
 width(PEN_WIDTH)
@@ -115,7 +120,13 @@ def draw_shell(shell_color, text_color, error_color):
 
     pencolor(text_color)
     goto(x_shift - 80, y_shift_text - 205)
-    write('SHELL\nNOT FOUND', font=('Courier', 28))
+
+    # CHANGE
+
+    write('SHELL\nNOT FOUND', font=('Courier', font_size))
+
+    # ---
+
     home()
 
 
