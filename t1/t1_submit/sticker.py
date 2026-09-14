@@ -1,6 +1,23 @@
 import math
 from turtle import *
 
+# ------
+
+screen = Screen()
+screen.setup(1200, 800)
+
+canvas = screen.getcanvas()
+
+print("Window:",
+      screen.window_width(),
+      screen.window_height())
+
+print("Tk scaling:",
+      canvas.tk.call("tk", "scaling"))
+
+# ------
+
+
 # ідея стікера = error 404 + каламбур з shell + черепаха, намальована за допомогою turtle
 # shell - це і програмна оболонка, і панцир черепахи
 
