@@ -17,7 +17,7 @@ print("Tk scaling:",
 
 # ------ SOLUTION
 
-current_scaling = float(canvas.tk.call("tk", "scaling"))
+current_scaling = float(canvas.tk.call("tk", "scaling")) # 1.3335
 target_scaling = 2.666
 font_size = round(28 * target_scaling / current_scaling)
 
@@ -121,7 +121,7 @@ def draw_shell(shell_color, text_color, error_color):
     pencolor(text_color)
     goto(x_shift - 80, y_shift_text - 205)
 
-    # CHANGE
+    # CHANGE HERE ---
 
     write('SHELL\nNOT FOUND', font=('Courier', font_size))
 
