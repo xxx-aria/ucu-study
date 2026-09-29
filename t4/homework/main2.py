@@ -25,6 +25,7 @@ while True:
             if cherries_ratio > CHERRIES_MAX_RATIO:
                 print(CHERRIES_LIMIT_ERROR)
                 break
+
         total_volume += current_volume
         print(total_volume)
         break
@@ -32,9 +33,11 @@ while True:
     if command == 'U':
         if current_volume == 0:
             continue
+
         if (cherries_count * ONE_CHERRY_VOLUME) / current_volume > CHERRIES_MAX_RATIO:
             print(CHERRIES_LIMIT_ERROR)
             break
+
         total_volume += current_volume
         current_volume = 0
         cherries_count = 0
@@ -43,10 +46,10 @@ while True:
     volume = 0
     count = ''
     for x in command:
-        if x == '#':
+        if x == '#' and not count:
             volume = ONE_POURING_VOLUME
             continue
-        elif x == '0':
+        elif x == '0' and not count:
             volume = ONE_CHERRY_VOLUME
             continue
 
@@ -55,13 +58,14 @@ while True:
 
         count += x
 
+    if count == '':
+        count = 1
     try:
         count = int(count)
     except ValueError:
-        count = 1
-        print('invalid count')
+        continue
 
-    current_volume += vol * count
+    current_volume += volume * count
 
     if current_volume > GLASS_VOLUME:
         print(GLASS_VOLUME_ERROR)
@@ -71,5 +75,5 @@ while True:
         print(ALCOHOL_LIMIT_ERROR)
         break
 
-    if vol == ONE_CHERRY_VOLUME:
+    if volume == ONE_CHERRY_VOLUME:
         cherries_count += count
