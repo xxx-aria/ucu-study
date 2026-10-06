@@ -142,7 +142,7 @@ if init_command == 'on':
                 print(f'Рівень ресурсів. Папір: {paper}/{MAX_PAPER_INPUT} арк. ({paper_percent}%) | Тонер: {tonner}/{MAX_TONNER_INPUT} мл ({tonner_percent}%)')
                 print(f'Лоток виводу: {loaded_count} арк. (вільно {MAX_PAPER_OUTPUT - loaded_count})')
                 print(f'Режим економії тонера: {'увімкнено' if eco_mode else 'вимкнено'}')
-                print(f'Кількість аркушів, на яку вистачить тонера для друку у кожному режимі.')
+                print('Кількість аркушів, на яку вистачить тонера для друку у кожному режимі.')
 
                 if eco_mode:
                     print(f'draft: {(tonner // TONNER_DRAFT) * 2} арк. | normal: {(tonner // TONNER_NORM) * 2} арк. | best: недоступно.')
@@ -289,7 +289,7 @@ if init_command == 'on':
                         popular_name += 'best'
                     print(f'Найпопулярніший режим: {popular_name} ({popular} док.)')
                 else:
-                    print(f'Найпопулярніший режим: відсутній.')
+                    print('Найпопулярніший режим: відсутній.')
 
                 print(f'Витрачено паперу: {paper_used} арк. | Витрачено тонера: {tonner_used} мл.')
                 print(f'Роздруківки забирали (разів): {take_count}')
