@@ -33,13 +33,13 @@ def type_by_angles(alpha, beta, gamma):
     """
 
     if not isinstance(alpha, int) or not isinstance(beta, int) or not isinstance(gamma, int):
-        return
+        return None
 
     max_angle = max(alpha, beta, gamma)
     min_angle = min(alpha, beta, gamma)
 
     if alpha + beta + gamma != 180 or min_angle <= 0:
-        return
+        return None
 
     if min_angle < 90 and max_angle < 90:
         triangle_type = 'acute triangle'
@@ -77,19 +77,18 @@ def type_by_sides(a, b, c):
     >>> type_by_sides(3, 3, 2015)
     """
 
-    if (not isinstance(a, int) or not isinstance(b, int) or not isinstance(c, int)) and (
-        not isinstance(a, float) or not isinstance(b, float) or not isinstance(c, float)
-    ):
-        return
+    if not isinstance(a, int) or not isinstance(b, int) or not isinstance(c, int):
+        if not isinstance(a, float) or not isinstance(b, float) or not isinstance(c, float):
+            return None
 
     max_side = max(a, b, c)
     min_side = min(a, b, c)
     mid_side = (a + b + c) - max_side - min_side
 
     if min_side <= 0:
-        return
+        return None
     if max_side > min_side + mid_side:
-        return
+        return None
 
     if max_side**2 == mid_side**2 + min_side**2:
         triangle_type = 'right triangle'
@@ -121,9 +120,9 @@ def get_letters(n):
     """
 
     if not isinstance(n, int):
-        return
+        return None
     if n <= 0 or n > 26:
-        return
+        return None
 
     letters = ''
     for i in range(n):
@@ -149,7 +148,15 @@ def number_of_capital_letters(s):
     4
     >>> number_of_capital_letters(1)
     """
-    pass
+    if not isinstance(s, str):
+        return None
+
+    count = 0
+    for symb in s:
+        if ord('A') <= ord(symb) <= ord('Z'):
+            count += 1
+
+    return count
 
 
 if __name__ == "__main__":

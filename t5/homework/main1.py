@@ -8,7 +8,7 @@ The doctests are just examples. Feel free to add your doctests."""
 # ****************************************
 # Problem 1
 # ****************************************
-def count_sheep(n):
+def count_sheep(n: int) -> str | None:
     """
     Generate a string that counts sheep from 1 to n.
 
@@ -30,14 +30,27 @@ def count_sheep(n):
     >>> count_sheep(3)
     '1 sheep...2 sheep...3 sheep...'
     >>> count_sheep(-5)
+    >>> count_sheep('sheep')
+    >>> count_sheep(5.5)
     """
-    pass
+
+    if not isinstance(n, int):
+        return None
+
+    if n < 0:
+        return None
+
+    counting_text = ''
+    for i in range(1, n + 1):
+        counting_text += str(i) + ' sheep...'
+
+    return counting_text
 
 
 # ****************************************
 # Problem 2
 # ****************************************
-def remove_vowels(text):
+def remove_vowels(text: str) -> str | None:
     """
     Remove all vowels from the given string and return the modified string.
 
@@ -58,14 +71,34 @@ def remove_vowels(text):
     ''
     >>> remove_vowels(123) is None
     True
+    >>> remove_vowels('123')
+    '123'
+    >>> remove_vowels('')
+    ''
+    >>> remove_vowels('   ,_')
+    '   ,_'
+    >>> remove_vowels('AaBb')
+    'Bb'
     """
-    pass
+
+    if not isinstance(text, str):
+        return None
+
+    text_no_vowels = ''
+    for symbol in text:
+        for vowel in 'aeiouAEIOU':
+            if symbol == vowel:
+                break
+        else:
+            text_no_vowels += symbol
+
+    return text_no_vowels
 
 
 # ****************************************
 # Problem 3
 # ****************************************
-def round_to_next_five(n):
+def round_to_next_five(n: int) -> int | None:
     """
     Round the given integer to the next (greater than or equal) multiple of 5.
 
@@ -86,14 +119,27 @@ def round_to_next_five(n):
     0
     >>> round_to_next_five(3.5) is None
     True
+    >>> round_to_next_five(0)
+    0
+    >>> round_to_next_five('a')
+    >>> round_to_next_five('5')
+    >>> round_to_next_five(10000001)
+    10000005
     """
-    pass
+
+    if not isinstance(n, int):
+        return None
+
+    while n % 5 != 0:
+        n += 1
+
+    return n
 
 
 # ****************************************
 # Problem 4
 # ****************************************
-def hex_char_to_int(c):
+def hex_char_to_int(c: str) -> int | None:
     """
     Convert a single hexadecimal character to its integer value (0-15).
 
@@ -118,14 +164,44 @@ def hex_char_to_int(c):
     >>> hex_char_to_int('#')
     -1
     >>> hex_char_to_int('AB')
+    >>> hex_char_to_int('7')
+    7
+    >>> hex_char_to_int(7)
+    >>> hex_char_to_int('10')
+    >>> hex_char_to_int('-1')
+    >>> hex_char_to_int('Б')
+    -1
+    >>> hex_char_to_int('F')
+    15
+    >>> hex_char_to_int('G')
+    -1
+    >>> hex_char_to_int('')
     """
-    pass
+
+    if not (isinstance(c, str) and len(c) == 1):
+        return None
+
+    if 'a' <= c <= 'f':
+        return 10 + ord(c) - ord('a')
+
+    if 'A' <= c <= 'F':
+        return 10 + ord(c) - ord('A')
+
+    try:
+        c = int(c)
+    except ValueError:
+        return -1
+
+    if not 0 <= c <= 9:
+        return -1
+
+    return c
 
 
 # ****************************************
 # Problem 5
 # ****************************************
-def rot13(message):
+def rot13(message: str) -> str | None:
     """
     Encode a string using the ROT13 cipher.
 
@@ -153,14 +229,35 @@ def rot13(message):
     >>> rot13("aBc XyZ")
     'nOp KlM'
     >>> rot13(123)
+    >>> rot13('grfg')
+    'test'
+    >>> rot13('')
+    ''
     """
-    pass
+
+    if not isinstance(message, str):
+        return None
+
+    encoded_message = ''
+    for symbol in message:
+        if not ('a' <= symbol <= 'z' or 'A' <= symbol <= 'Z'):
+            encoded_message += symbol
+            continue
+
+        symbol_ord = ord(symbol)
+        new_ord = symbol_ord + 13
+        if symbol_ord <= ord('z') < new_ord or symbol_ord <= ord('Z') < new_ord:
+            new_ord -= 26
+
+        encoded_message += chr(new_ord)
+
+    return encoded_message
 
 
 # ****************************************
 # Problem 6
 # ****************************************
-def square_digits(n):
+def square_digits(n: int) -> int | None:
     """
     Square every digit of a number and concatenate them into a new integer.
 
@@ -182,14 +279,34 @@ def square_digits(n):
     >>> square_digits(5)
     25
     >>> square_digits(3.5)
+    >>> square_digits('2')
+    >>> square_digits(1)
+    1
+    >>> square_digits(-1)
+    1
+    >>> square_digits(-34)
+    916
+    >>> square_digits(100)
+    100
     """
-    pass
+
+    if not isinstance(n, int):
+        return None
+
+    n = abs(n)  # removing the sign
+
+    squared_digits = ''
+    n_str = str(n)
+    for digit in n_str:
+        squared_digits += str(int(digit) ** 2)
+
+    return int(squared_digits)
 
 
 # ****************************************
 # Problem 7
 # ****************************************
-def multiply_until_single_digit(num):
+def multiply_until_single_digit(num: int) -> int | None:
     """
     Calculate the multiplicative persistence of a positive integer.
 
@@ -209,14 +326,36 @@ def multiply_until_single_digit(num):
     >>> multiply_until_single_digit(4)
     0
     >>> multiply_until_single_digit(-5)
+    >>> multiply_until_single_digit('12')
+    >>> multiply_until_single_digit(0)
+    0
+    >>> multiply_until_single_digit(121311)
+    1
+    >>> multiply_until_single_digit(10)
+    1
     """
-    pass
+
+    if not isinstance(num, int):
+        return None
+
+    if num < 0:
+        return None
+
+    steps = 0
+    while num >= 10:
+        product = 1
+        for digit in str(num):
+            product *= int(digit)
+        num = product
+        steps += 1
+
+    return steps
 
 
 # ****************************************
 # Problem 8
 # ****************************************
-def find_n_cubes(m):
+def find_n_cubes(m: int) -> int | None:
     """
     Find the number of cubes needed to build a pile with a given total volume.
 
@@ -240,14 +379,37 @@ def find_n_cubes(m):
     >>> find_n_cubes(4)
     -1
     >>> find_n_cubes(0)
+    >>> find_n_cubes('a')
+    >>> find_n_cubes(-36)
+    >>> find_n_cubes(-4)
+    >>> find_n_cubes(9)
+    2
     """
-    pass
+
+    if not isinstance(m, int):
+        return None
+
+    if m <= 0:
+        return None
+
+    sum_n = 0
+    n = 0
+    while sum_n < m:
+        n += 1
+        sum_n = 0
+        for i in range(0, n):
+            sum_n += (n - i) ** 3
+
+    if sum_n == m:
+        return n
+
+    return -1
 
 
 # ****************************************
 # Problem 9
 # ****************************************
-def count_carries(num1, num2):
+def count_carries(num1: int, num2: int) -> int | None:
     """
     Count the number of carry operations when adding two numbers.
 
@@ -274,14 +436,47 @@ def count_carries(num1, num2):
     >>> count_carries(1, 9)
     1
     >>> count_carries(-5, 10)
+    >>> count_carries(89, 12)
+    2
+    >>> count_carries(2.7, 10)
+    >>> count_carries(10, 'a')
+    >>> count_carries(99, 0)
+    0
+    >>> count_carries(0, 0)
+    0
+    >>> count_carries(99, 1)
+    2
+    >>> count_carries(8416, 3516)
+    2
     """
-    pass
+
+    if not (isinstance(num1, int) and isinstance(num2, int)):
+        return None
+
+    if num1 < 0 or num2 < 0:
+        return None
+
+    carries = 0
+    add_from_carry = False
+    for _ in range(len(str(max(num1, num2)))):  # iterating length-of-the-longer-number times
+        digit1 = num1 % 10
+        digit2 = num2 % 10
+        num1 //= 10
+        num2 //= 10
+        digits_sum = digit1 + digit2 + add_from_carry  # True = 1, False = 0
+        if digits_sum >= 10:
+            add_from_carry = True
+            carries += 1
+        else:
+            add_from_carry = False
+
+    return carries
 
 
 # ****************************************
 # Problem 10
 # ****************************************
-def collatz_length(n):
+def collatz_length(n: int) -> int | None:
     """
     Calculate the length of the Collatz sequence for a given positive integer.
 
@@ -309,14 +504,31 @@ def collatz_length(n):
     >>> collatz_length(20)
     8
     >>> collatz_length(0)
+    >>> collatz_length(-2)
+    >>> collatz_length('test')
     """
-    pass
+
+    if not isinstance(n, int):
+        return None
+
+    if n <= 0:
+        return None
+
+    steps = 1
+    while n > 1:
+        if n % 2 == 0:
+            n //= 2
+        else:
+            n = n * 3 + 1
+        steps += 1
+
+    return steps
 
 
 # ****************************************
 # Problem 11
 # ****************************************
-def hex_to_rgb(hex_color):
+def hex_to_rgb(hex_color: str) -> str | None:
     """
     Extract the individual RGB (Red, Green, Blue) component values from a hex color.
 
@@ -343,14 +555,61 @@ def hex_to_rgb(hex_color):
     >>> hex_to_rgb("#AbCdEf")
     'r: 171, g: 205, b: 239'
     >>> hex_to_rgb("#FFF")
+    >>> hex_to_rgb('#ff9933')
+    'r: 255, g: 153, b: 51'
+    >>> hex_to_rgb('#abcxyz')
+    >>> hex_to_rgb('test')
+    >>> hex_to_rgb('FF9933')
+    >>> hex_to_rgb(992233)
+    >>> hex_to_rgb('#FF99331')
+    >>> hex_to_rgb('FF99#33')
+    >>> hex_to_rgb('#FFFFFF')
+    'r: 255, g: 255, b: 255'
     """
-    pass
+
+    if not isinstance(hex_color, str):
+        return None
+
+    if len(hex_color) != 7:
+        return None
+
+    is_valid = True
+    red = 0
+    green = 0
+    blue = 0
+
+    index = 0
+    for symbol in hex_color:
+        if index == 0:
+            index += 1
+            if symbol != '#':
+                is_valid = False
+                break
+            continue
+        number = hex_char_to_int(symbol)
+        if number == -1:
+            is_valid = False
+            break
+        position = index % 2  # 1 for first, 0 for second hex char in one olor
+        match index:
+            case 1 | 2:
+                red += number * 16**position  # 16**1 = 16, 16**0 = 1
+            case 3 | 4:
+                green += number * 16**position
+            case 5 | 6:
+                blue += number * 16**position
+        index += 1
+
+    if not is_valid:
+        return None
+
+    return f'r: {red}, g: {green}, b: {blue}'
 
 
 # ****************************************
 # Problem 12
 # ****************************************
-def is_valid_isbn10(isbn):
+def is_valid_isbn10(isbn: str) -> bool | None:
     """
     Validate an ISBN-10 identifier.
 
@@ -374,14 +633,43 @@ def is_valid_isbn10(isbn):
     False
     >>> is_valid_isbn10("1112223339X")
     >>> is_valid_isbn10(1112223339)
+    >>> is_valid_isbn10('12345678901')
+    >>> is_valid_isbn10(1234567890)
+    >>> is_valid_isbn10("111222333X")
+    False
+    >>> is_valid_isbn10('290002000X')
+    True
+    >>> is_valid_isbn10('123ABCD*!#')
+    False
+    >>> is_valid_isbn10('12345678a0')
+    False
     """
-    pass
+
+    if not isinstance(isbn, str):
+        return None
+
+    if len(isbn) != 10:
+        return None
+
+    total_sum = 0
+    index = 1
+    for num in isbn:
+        if index == 10 and num == 'X':
+            num = 10
+        try:
+            num = int(num)
+        except ValueError:
+            return False
+        total_sum += num * index
+        index += 1
+
+    return total_sum % 11 == 0
 
 
 # ****************************************
 # Problem 13
 # ****************************************
-def prime_factors(n):
+def prime_factors(n: int) -> str | None:
     """
     Find the prime factor decomposition of a positive integer n > 1.
 
@@ -409,14 +697,51 @@ def prime_factors(n):
     '(2**2)(3**3)(5)(7)(11**2)(17)'
     >>> prime_factors(1)
     >>> prime_factors(0)
+    >>> prime_factors(-1)
+    >>> prime_factors('11')
+    >>> prime_factors(997)
+    '(997)'
     """
-    pass
+
+    if not isinstance(n, int):
+        return None
+
+    if n <= 1:
+        return None
+
+    prime_num = 2
+    is_prime = True
+    result = ''
+    while n > 1:
+        power = 0
+
+        # finding next prime
+        while not is_prime:
+            for i in range(2, prime_num):
+                if prime_num % i == 0:
+                    prime_num += 1
+                    break
+            is_prime = True
+
+        while n % prime_num == 0:
+            n //= prime_num
+            power += 1
+
+        if power == 1:
+            result += f'({prime_num})'
+        elif power > 1:
+            result += f'({prime_num}**{power})'
+
+        prime_num += 1
+        is_prime = False
+
+    return result
 
 
 # ****************************************
 # Problem 14
 # ****************************************
-def reduce_fraction(numerator, denominator):
+def reduce_fraction(numerator: int, denominator: int) -> str | None:
     """
     Reduce a fraction to its simplest form and return it as a string.
 
@@ -439,14 +764,36 @@ def reduce_fraction(numerator, denominator):
     >>> reduce_fraction(7, 13)
     '7/13'
     >>> reduce_fraction(5, 0)
+    >>> reduce_fraction(-1, 2)
+    >>> reduce_fraction('a', 2)
+    >>> reduce_fraction(2.5, 3)
+    >>> reduce_fraction(5, 1)
+    '5/1'
+    >>> reduce_fraction(5, 5)
+    '1/1'
     """
-    pass
+
+    if not (isinstance(numerator, int) and isinstance(denominator, int)):
+        return None
+
+    if numerator <= 0 or denominator <= 0:
+        return None
+
+    a, b = numerator, denominator
+    # finding gcd(numerator, denominator)
+    while b != 0:
+        a, b = b, a % b
+    gcd = a
+    numerator //= gcd
+    denominator //= gcd
+
+    return f'{numerator}/{denominator}'
 
 
 # ****************************************
 # Problem 15
 # ****************************************
-def to_binary(n):
+def to_binary(n: int) -> str | None:
     """
     Convert a non-negative integer to its binary representation as a string.
 
@@ -471,8 +818,24 @@ def to_binary(n):
     '11111111'
     >>> to_binary(-3)
     >>> to_binary(2.5)
+    >>> to_binary('2')
     """
-    pass
+
+    if not isinstance(n, int):
+        return None
+
+    if n < 0:
+        return None
+
+    if n == 0:
+        return '0'
+
+    bin_num = ''
+    while n > 0:
+        bin_num = str(n % 2) + bin_num
+        n //= 2
+
+    return bin_num
 
 
 if __name__ == "__main__":
