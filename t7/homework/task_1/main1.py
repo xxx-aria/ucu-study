@@ -41,22 +41,25 @@ def read_input_file(pathname: str, number: int) -> list[list]:
         return students
 
     with open(pathname, mode='r', encoding='utf-8') as f:
-        # skip first line(s), the header(s)
         while (line := f.readline()) != '' and len(students) < number:
             line = line.split('\t')
-            if not line[0].isdigit():
+            if not line[0].isdigit(): # skip non-students (e.g. headers)
                 continue
+
             school_line = f.readline()
-            # skip lines with separate ZNO scores
+            # skip lines with separate subject's ZNO scores
             while not school_line.strip().startswith('Середній бал'):
                 school_line = f.readline()
             school_avg = school_line.split()[-1]
+
             mark_line = f.readline()
-            while not mark_line.startswith('—'):  # admission mark — + / — -
+            while not mark_line.startswith('—'):  # admission mark line: — + / — -
                 mark_line = f.readline()
             mark = mark_line.split()[-1]
+
             student = line[0:2] + [mark] + [line[3]] + [school_avg]
             students.append(student)
+
     return students
 
 
@@ -86,7 +89,7 @@ def write_csv_file(pathname: str, csv_pathname: str) -> None:
     >>> os.remove(out.name)
     '''
 
-    students = read_input_file(pathname=pathname, number=float('inf'))
+    students = read_input_file(pathname, float('inf'))
 
     with open(csv_pathname, mode='w', encoding='utf-8') as f:
         f.write('№,ПІБ,Д,Заг.бал,С.б.док.осв.\n')

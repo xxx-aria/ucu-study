@@ -30,19 +30,19 @@ def generate_grid() -> list[list[str]]:
     """
 
     n = 3
-    vowels = 3
-    consonants = 6
+    vowels_left = 3
+    consonants_left = 6
     grid = [[''] * n for _ in range(n)]
     for i in range(n):
         for j in range(n):
             while True:
                 letter = random.choice(range(ord('A'), (ord('Z') + 1)))
                 letter = chr(letter)
-                if letter in ('A', 'E', 'I', 'O', 'U') and vowels > 0:
-                    vowels -= 1
+                if letter in ('A', 'E', 'I', 'O', 'U') and vowels_left > 0:
+                    vowels_left -= 1
                     break
-                if letter not in ('A', 'E', 'I', 'O', 'U') and consonants > 0:
-                    consonants -= 1
+                if letter not in ('A', 'E', 'I', 'O', 'U') and consonants_left > 0:
+                    consonants_left -= 1
                     break
             grid[i][j] = letter
 
@@ -116,6 +116,7 @@ def get_words(pathname: str, letters: list[str]) -> list[str]:
             word = word.strip().lower()
             if word_is_valid(word, letters) and word not in valid_words:
                 valid_words.append(word)
+
     return valid_words
 
 

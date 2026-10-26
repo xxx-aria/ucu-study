@@ -57,7 +57,7 @@ def check_diag_down(
     for peg_i in range(-3, 13):
         diag_down = [board[peg_i + x][3 - x] for x in range(4)]
         if check_one_colour(diag_down):
-            combinations.append([(3 - x, peg_i + x) for x in range(4)])
+            combinations.append([(3 - x, (peg_i + x) % 16) for x in range(4)])
 
     return combinations
 
@@ -70,7 +70,7 @@ def check_diag_up(board: list[list[str | int]]) -> bool | tuple[bool | list[list
     for peg_i in range(-3, 13):
         diag_down = [board[peg_i + x][x] for x in range(4)]
         if check_one_colour(diag_down):
-            combinations.append([(x, peg_i + x) for x in range(4)])
+            combinations.append([(x, (peg_i + x) % 16) for x in range(4)])
 
     return combinations
 
@@ -133,6 +133,7 @@ def put_bead(board: list[list[str | int]], color: str, peg: int) -> None:
     for i in range(3, -1, -1):
         if board[peg][i] == 0:
             board[peg][i] = color
+            return
 
 
 def board_generation() -> list[list[str | int]]:
@@ -167,15 +168,16 @@ def board_generation() -> list[list[str | int]]:
 
     board = [[0] * 4 for _ in range(16)]
     available_pegs = list(range(16))
-    moves = random.randint(1, 32)
+    moves = random.randint(1, 32)  # 16 of each colour max
 
-    for move in range(moves):
-        color = 'g' if move % 2 == 1 else 'w'
+    colour = random.choice(('g', 'w'))
+    for _ in range(moves):
+        colour = 'g' if colour == 'w' else 'w'
         peg = random.choice(available_pegs)
-        put_bead(board, color, peg)
+        put_bead(board, colour, peg)
         if board[peg].count(0) == 0:
             available_pegs.remove(peg)
-        if winning_combination(board)[0]:
+        if not winning_combination(board):
             break
 
     return board
