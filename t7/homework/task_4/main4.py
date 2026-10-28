@@ -11,14 +11,36 @@ import random
 
 
 def check_one_colour(beads: list[str | int]) -> bool:
-    """Checks if 4 beads are of one colour."""
+    """
+    Checks if 4 beads are of one colour.
+
+    >>> check_one_colour([0, 'w', 'g', 'g'])
+    False
+    >>> check_one_colour(['w', 'w', 'w', 'w'])
+    True
+    >>> check_one_colour([0, 0, 0, 0])
+    False
+    """
     return beads.count('w') == 4 or beads.count('g') == 4
 
 
 def check_verticals(
     board: list[list[str | int]],
-) -> bool | tuple[bool | list[list[tuple[int, int]]]]:
-    """Looks for up verticals of one colour."""
+) -> list[list[tuple[int, int]]]:
+    """
+    Looks for up verticals of one colour.
+
+    >>> board = [[0] * 4 for _ in range(16)]
+    >>> board[11] = ['g', 'w', 'g', 'g']
+    >>> check_verticals(board)
+    []
+    >>> board[7] = ['g', 'g', 'g', 'g']
+    >>> check_verticals(board)
+    [[(0, 7), (1, 7), (2, 7), (3, 7)]]
+    >>> board[2] = ['w', 'w', 'w', 'w']
+    >>> check_verticals(board)
+    [[(0, 2), (1, 2), (2, 2), (3, 2)], [(0, 7), (1, 7), (2, 7), (3, 7)]]
+    """
 
     combinations = []
 
@@ -31,8 +53,19 @@ def check_verticals(
 
 def check_horizontals(
     board: list[list[str | int]],
-) -> bool | tuple[bool | list[list[tuple[int, int]]]]:
-    """Look for horizontals of one colour."""
+) -> list[list[tuple[int, int]]]:
+    """
+    Look for horizontals of one colour.
+
+    >>> board = [[0] * 4 for _ in range(16)]
+    >>> board[11] = ['g', 'w', 'g', 'g']
+    >>> board[7] = ['g', 'g', 'g', 'g']
+    >>> check_horizontals(board)
+    []
+    >>> board[15][3] = board[0][3] = board[1][3] = board[2][3] = 'w'
+    >>> check_horizontals(board)
+    [[(3, 15), (3, 0), (3, 1), (3, 2)]]
+    """
 
     combinations = []
     rows = [[board[j][i] for j in range(16)] for i in range(4)]
@@ -47,23 +80,15 @@ def check_horizontals(
     return combinations
 
 
-def check_diag_down(
-    board: list[list[str | int]],
-) -> bool | tuple[bool | list[list[tuple[int, int]]]]:
-    """Looks for down diagonals of one colour."""
+def check_diag_down(board: list[list[str | int]]) -> list[list[tuple[int, int]]]:
+    """
+    Looks for down diagonals of one colour.
 
-    combinations = []
-
-    for peg_i in range(-3, 13):
-        diag_down = [board[peg_i + x][3 - x] for x in range(4)]
-        if check_one_colour(diag_down):
-            combinations.append([(3 - x, (peg_i + x) % 16) for x in range(4)])
-
-    return combinations
-
-
-def check_diag_up(board: list[list[str | int]]) -> bool | tuple[bool | list[list[tuple[int, int]]]]:
-    """Looks for up diagonals of one colour."""
+    >>> board = [[0, 'w', 'g', 'g'] if i % 2 == 0 else [0, 'g', 'w', 'w'] for i in range(16)]
+    >>> board[13][0] = board[14][1] = board[15][2] = board[0][3] = 'g'
+    >>> check_diag_down(board)
+    [[(0, 13), (1, 14), (2, 15), (3, 0)]]
+    """
 
     combinations = []
 
@@ -75,9 +100,29 @@ def check_diag_up(board: list[list[str | int]]) -> bool | tuple[bool | list[list
     return combinations
 
 
+def check_diag_up(board: list[list[str | int]]) -> list[list[tuple[int, int]]]:
+    """
+    Looks for up diagonals of one colour.
+
+    >>> board = [[0, 'w', 'g', 'g'] if i % 2 == 0 else [0, 'g', 'w', 'w'] for i in range(16)]
+    >>> board[14][3] = board[15][2] = board[0][1] = board[1][0] = 'w'
+    >>> check_diag_up(board)
+    [[(3, 14), (2, 15), (1, 0), (0, 1)]]
+    """
+
+    combinations = []
+
+    for peg_i in range(-3, 13):
+        diag_down = [board[peg_i + x][3 - x] for x in range(4)]
+        if check_one_colour(diag_down):
+            combinations.append([(3 - x, (peg_i + x) % 16) for x in range(4)])
+
+    return combinations
+
+
 def winning_combination(
     board: list[list[str | int]],
-) -> bool | tuple[bool | list[list[tuple[int, int]]]]:
+) -> bool | tuple[bool, list[list[tuple[int, int]]]]:
     """
     Checks the board for winning combinations.
 
@@ -128,7 +173,17 @@ def winning_combination(
 
 
 def put_bead(board: list[list[str | int]], color: str, peg: int) -> None:
-    """Puts a coloured bead on the requested peg of the board."""
+    """Puts a coloured bead on the requested peg of the board.
+
+    >>> board = [[0] * 4 for _ in range(16)]
+    >>> put_bead(board, 'g', 2)
+    >>> board[2][3] == 'g'
+    True
+    >>> board[7] = [0, 'w', 'w', 'w']
+    >>> put_bead(board, 'g', 7)
+    >>> board[7] == ['g', 'w', 'w', 'w']
+    True
+    """
 
     for i in range(3, -1, -1):
         if board[peg][i] == 0:
